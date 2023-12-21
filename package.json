@@ -1,8 +1,8 @@
 {
-  "name": "packageName",
+  "name": "unget",
   "version": "0.0.0",
   "description": "",
-  "repository": "unjs/packageName",
+  "repository": "xabru/unget",
   "license": "MIT",
   "sideEffects": false,
   "type": "module",
@@ -21,8 +21,7 @@
   ],
   "scripts": {
     "build": "unbuild",
-    "dev": "vitest dev",
-    "play": "jiti playground",
+    "dev": "jiti src/index.ts",
     "lint": "eslint --cache --ext .ts,.js,.mjs,.cjs . && prettier -c src test",
     "lint:fix": "eslint --cache --ext .ts,.js,.mjs,.cjs . --fix && prettier -c src test -w",
     "prepack": "pnpm run build",
@@ -42,5 +41,11 @@
     "unbuild": "^2.0.0",
     "vitest": "^1.0.1"
   },
-  "packageManager": "pnpm@8.11.0"
+  "packageManager": "pnpm@8.11.0",
+  "dependencies": {
+    "citty": "^0.1.5",
+    "consola": "^3.2.3",
+    "defu": "^6.1.3",
+    "giget": "^1.1.3"
+  }
 }
