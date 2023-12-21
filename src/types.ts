@@ -1,4 +1,4 @@
-export interface DownloadTemplateOptions {
+export interface GigetOptions {
   source: string;
   options?: {
     dir?: string;

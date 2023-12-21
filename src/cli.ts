@@ -2,9 +2,9 @@ import { defineCommand, renderUsage, runMain } from 'citty';
 import consola from 'consola';
 import defu from 'defu';
 
-import Task from './task';
+import Wrapper from './wrapper';
 
-import { DownloadTemplateOptions } from './types';
+import { GigetOptions } from './types';
 
 function Cli(...params: string[]) {
   const main = defineCommand({
@@ -46,6 +46,7 @@ function Cli(...params: string[]) {
       subdir: {
         type: 'string',
         description: 'Directory of the repo to clone from.',
+        alias: 'S',
       },
       force: {
         type: 'boolean',
@@ -62,7 +63,7 @@ function Cli(...params: string[]) {
         description: 'Do not attempt to download and use cached version.',
         alias: 'o',
       },
-      preferOffline: {
+      'prefer-offline': {
         type: 'boolean',
         description: 'Use cache if exists otherwise try to download.',
         alias: 'O',
@@ -82,7 +83,7 @@ function Cli(...params: string[]) {
     },
 
     run: ({ args }) => {
-      const defaultOptions: DownloadTemplateOptions = {
+      const gigetDefaultOptions: GigetOptions = {
         source: '',
         options: {
           dir: '',
@@ -95,19 +96,29 @@ function Cli(...params: string[]) {
           offline: false,
           preferOffline: false,
           cwd: '',
-          auth: process.env.GITHUB_TOKEN,
+          auth: process.env.GITHUB_TOKEN || '',
         },
       };
 
-      if (args.hasOwnProperty('force-clean')) {
-        defaultOptions.options!.forceClean = args['force-clean'];
+      const mappingOptions = {
+        token: 'auth',
+        'force-clean': 'forceClean',
+        'prefer-offline': 'preferOffline',
+      };
+
+      const { options } = gigetDefaultOptions;
+
+      for (const [argKey, optionKey] of Object.entries(mappingOptions)) {
+        options![optionKey] = args.hasOwnProperty(argKey)
+          ? args[argKey]
+          : options![optionKey];
       }
 
-      const finalArgs = defu(args, defaultOptions);
-      console.log('merge args:', { args });
-      console.log('final args:', { finalArgs });
+      // console.log({ args }, { gigetDefaultOptions });
 
-      Task(finalArgs);
+      const gigetOptions = defu(args, gigetDefaultOptions);
+
+      Wrapper(gigetOptions);
     },
   });
 
